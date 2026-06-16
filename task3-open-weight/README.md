@@ -38,7 +38,11 @@ Then open `.env` and fill in:
 > `env file .env not found`. Even the Ollama-only run requires the `.env` file to exist
 > (though Ollama itself needs no API key).
 
-## Run both models
+## Run with Docker
+
+This project is Docker-only — the command below builds the image, starts the local
+Ollama model, and runs both models on the same workflow. Run it from the project root
+after completing Setup above.
 
 ```bash
 docker compose up --build

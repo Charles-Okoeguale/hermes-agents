@@ -1,0 +1,10 @@
+# Do NOT ignore .hermes/ — that folder holds the custom plugin (save_note) and
+# must be copied into the image. We only ignore the runtime memory dir below.
+.venv
+.hermes_home
+notes
+.git
+__pycache__
+*.pyc
+*.pyo
+.env

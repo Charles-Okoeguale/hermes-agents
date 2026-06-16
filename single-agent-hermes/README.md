@@ -37,9 +37,40 @@ A custom tool is three pieces, kept in separate files so each has one job:
 - **`__init__.py`** — `register(ctx)`, which wires the schema to its handler.
 - **`plugin.yaml`** — the manifest declaring what tools the plugin provides.
 
-## Setup
+## Run with Docker (recommended)
 
-Run these from inside the `single-agent-hermes/` folder, in order.
+Docker avoids the local Python-version and dependency setup entirely — the image
+pins Python 3.12 and clones Hermes Agent for you (with retries, so a flaky network
+doesn't break the build). From a fresh clone, three steps in order:
+
+```bash
+# 1. Create your .env from the template (the repo does NOT ship a .env)
+cp .env.example .env
+
+# 2. Open .env and paste in your real keys:
+#      ANTHROPIC_API_KEY=sk-ant-...   (must have API credits)
+#      TAVILY_API_KEY=tvly-...        (free at https://tavily.com)
+
+# 3. Build and run on any research question you like
+docker compose run --rm agent "What are the headline new features in Python 3.13?"
+```
+
+> **Note:** Step 1 is required. `docker-compose.yml` reads keys from `.env`, so
+> running step 3 before creating `.env` fails with `env file .env not found`.
+> The `.env` file is gitignored on purpose — secrets are never committed.
+
+The first run builds the image (clones Hermes Agent from GitHub — give it a minute).
+The cited note is written to `notes/<title>.md` on your host, and the conversation
+is persisted to `.hermes_home/state.db` (the Hermes SQLite session store), which is
+mounted as a host volume so it survives across runs.
+
+You can also run `docker compose up --build` to run the default question in the
+`command:` line of `docker-compose.yml`.
+
+## Run locally (without Docker)
+
+Prefer running on your own machine instead? Run these from inside the
+`single-agent-hermes/` folder, in order.
 
 1. **Create and activate a virtual environment**
 
@@ -63,6 +94,8 @@ Run these from inside the `single-agent-hermes/` folder, in order.
    This pulls in Hermes Agent (the agent loop, LLM connection, memory, and the
    `web_search`/`web_extract` built-in tools) and everything it needs.
 
+   > If this step fails mid-download (pip clones Hermes from GitHub, which can stall on a flaky network), skip the local setup and use the Docker path above — it clones Hermes with retries.
+
 3. **Add your keys**
 
    ```bash
@@ -78,9 +111,7 @@ CLI instead of as a project library, run
 `hermes model` command to pick a model — but for pulling and running *this* project,
 the three steps above are all you need.)
 
-## Run it
-
-With the venv still active (step 1):
+With the venv still active, run the agent:
 
 ```bash
 python run_research_agent.py "What are the headline new features in Python 3.13?"

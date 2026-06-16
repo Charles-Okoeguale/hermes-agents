@@ -24,25 +24,6 @@ User gives a topic
 
 **Long-term memory** is handled by Hermes's built-in `memory` tool. The Researcher appends a summary of each session's findings to `$HERMES_HOME/memories/MEMORY.md`. On the next run, Hermes loads that file into the Researcher's system prompt automatically, so knowledge compounds across runs. In Docker, `$HERMES_HOME` is pinned to `/app/.hermes_home` and mounted as a host volume, so memory survives `docker compose down`.
 
-## Setup
-
-```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-# Fill in ANTHROPIC_API_KEY and TAVILY_API_KEY in .env
-```
-
-## Run locally
-
-```bash
-source .venv/bin/activate
-python run_workflow.py "Your topic here"
-```
-
-Articles are saved to `output/`.
-
 ## Run with Docker (recommended)
 
 From a fresh clone, three steps — in this order:
@@ -51,9 +32,9 @@ From a fresh clone, three steps — in this order:
 # 1. Create your .env from the template (the repo does NOT ship a .env)
 cp .env.example .env
 
-# 2. Open .env and paste in your real keys:
-#      ANTHROPIC_API_KEY=sk-ant-...   (must have API credits)
-#      TAVILY_API_KEY=tvly-...        (free at https://tavily.com)
+# 2. Open .env and paste in your keys:
+#      ANTHROPIC_API_KEY=sk-ant-...   (required — must have API credits)
+#      TAVILY_API_KEY=tvly-...        (optional — better web search; free at https://tavily.com)
 
 # 3. Build and run on any topic you like
 docker compose run --rm workflow "any topic here"
@@ -70,8 +51,29 @@ findings are appended to `.hermes_home/memories/MEMORY.md`, which persists acros
 You can also use `docker compose up --build` to run the default topic set in the
 `command:` line of `docker-compose.yml`.
 
+> **A couple of things you'll notice on every run:**
+> - A `Browser engine (Chromium...) is not installed` warning prints at startup. It's
+>   safe to ignore — the web tools (`web_search`, `web_extract`) don't need Chromium.
+> - A full run takes several minutes. Most of that is the two agents generating text
+>   (and one slow web page) — it is not hung, so let it finish.
+
+## Run locally (without Docker)
+
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+# Fill in ANTHROPIC_API_KEY (and optionally TAVILY_API_KEY) in .env
+
+python run_workflow.py "Your topic here"
+```
+
+Articles are saved to `output/`.
+
 ## Requirements
 
 - Python 3.11-3.13
-- `ANTHROPIC_API_KEY` — for the LLM (Claude)
-- `TAVILY_API_KEY` — for web search ([get one free at tavily.com](https://tavily.com))
+- `ANTHROPIC_API_KEY` — **required**, for the LLM (Claude)
+- `TAVILY_API_KEY` — **optional**, for better web search. If absent, the agent falls
+  back to free DuckDuckGo search, so the workflow still runs. ([get one free at tavily.com](https://tavily.com))

@@ -1,5 +1,9 @@
 # Hermes Agent provides the agent loop, LLM connection, and memory.
 hermes-agent @ git+https://github.com/NousResearch/hermes-agent.git
 
+# Loads ANTHROPIC_API_KEY / TAVILY_API_KEY from .env at startup
+# (used by run_research_agent.py before Hermes initialises).
+python-dotenv
+
 # The custom tools use only the Python standard library (urllib, json, re),
 # so no other runtime dependencies are required.

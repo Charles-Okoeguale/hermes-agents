@@ -5,3 +5,7 @@ __pycache__/
 *.pyc
 notes/
 .DS_Store
+
+# Hermes runtime home (SQLite session store state.db) — created at runtime,
+# mounted as a Docker volume; never committed.
+.hermes_home/

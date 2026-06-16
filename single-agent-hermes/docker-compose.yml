@@ -1,0 +1,12 @@
+services:
+  agent:
+    build: .
+    env_file: .env
+    volumes:
+      # Cited notes from the save_note tool land here, on the host.
+      - ./notes:/app/notes
+      # Persist the Hermes SQLite session store (state.db) on the host so the
+      # conversation history survives across runs and can be demonstrated
+      # carrying over between container runs.
+      - ./.hermes_home:/app/.hermes_home
+    command: ["What are the headline new features in Python 3.13?"]
