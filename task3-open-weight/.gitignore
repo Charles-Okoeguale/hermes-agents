@@ -1,0 +1,14 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Generated articles — ignore run output, but keep the output/ folder skeleton
+# (via .gitkeep) so the docker-compose bind mounts have their target dirs.
+output/*.md
+output/ollama/*.md
+output/openrouter/*.md
+# Force-keep ONE sample article as evidence the OpenRouter run worked.
+!output/openrouter/20260616_002718_The_State_of_Open-Source_LLMs_in_2025.md
+!**/.gitkeep

@@ -1,0 +1,8 @@
+# Keep the build context small — none of this is needed inside the image.
+# Hermes is installed from GitHub via requirements.txt, not copied in.
+.venv/
+__pycache__/
+*.pyc
+.env
+output/
+.git/

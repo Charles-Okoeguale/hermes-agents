@@ -1,0 +1,5 @@
+name: research_tools
+version: "1.0"
+description: Tools for the Researcher agent — save article to output folder
+provides_tools:
+  - save_article

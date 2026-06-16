@@ -1,0 +1,19 @@
+# Secrets — never commit real keys (any sub-project)
+.env
+**/.env
+
+# Agent output
+notes/
+**/notes/
+
+# Python
+__pycache__/
+**/__pycache__/
+*.pyc
+.venv/
+**/.venv/
+venv/
+
+# OS
+.DS_Store
+.claude/

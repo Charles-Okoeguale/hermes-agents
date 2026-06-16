@@ -1,0 +1,16 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+output/
+.DS_Store
+
+# Hermes runtime home — ignore all the runtime exhaust (logs, sessions, auth,
+# caches, sandboxes) but KEEP the long-term-memory seed so cross-run memory
+# persistence can be demonstrated out of the box.
+.hermes_home/*
+!.hermes_home/memories/
+.hermes_home/memories/*
+!.hermes_home/memories/MEMORY.md
+.hermes_home/memories/*.lock

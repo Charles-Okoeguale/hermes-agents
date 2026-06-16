@@ -1,0 +1,6 @@
+# Minimal Hermes config baked into the Docker image.
+# Standalone project plugins are opt-in — they only load if listed here.
+# This is what makes our custom `save_article` tool available inside the container.
+plugins:
+  enabled:
+    - research_tools

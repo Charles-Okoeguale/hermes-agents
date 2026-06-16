@@ -1,0 +1,63 @@
+services:
+
+  # ── Ollama (local open-weight model) ─────────────────────────────────────
+  # Serves the model locally inside Docker. No API key needed.
+  # Change OLLAMA_MODEL in .env to use a different model.
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    healthcheck:
+      # The ollama image has no curl — use its own CLI as the probe.
+      # `ollama list` only succeeds once the server is accepting requests.
+      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  # Pull the model before the workflow runs
+  ollama-pull:
+    image: ollama/ollama:latest
+    entrypoint: ["/bin/sh", "-c", "ollama pull $$OLLAMA_MODEL"]
+    environment:
+      OLLAMA_MODEL: "${OLLAMA_MODEL:-llama3.2}"
+      OLLAMA_HOST: "http://ollama:11434"
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+  workflow-ollama:
+    build: .
+    env_file: .env
+    environment:
+      HERMES_MODEL: "${OLLAMA_MODEL:-llama3.2}"
+      HERMES_PROVIDER: "ollama"
+      HERMES_API_KEY: "ollama"
+      HERMES_BASE_URL: "http://ollama:11434/v1"
+    volumes:
+      - ./output/ollama:/app/output
+    depends_on:
+      ollama-pull:
+        condition: service_completed_successfully
+    command: ["The current state of open-source LLMs in 2025"]
+
+  # ── OpenRouter (cloud open-weight model) ─────────────────────────────────
+  # Routes to hosted open-weight models via one API key.
+  # Set OPENROUTER_API_KEY and optionally OPENROUTER_MODEL in .env.
+  workflow-openrouter:
+    build: .
+    env_file: .env
+    environment:
+      HERMES_MODEL: "${OPENROUTER_MODEL:-openai/gpt-oss-120b:free}"
+      HERMES_PROVIDER: "openrouter"
+      HERMES_API_KEY: "${OPENROUTER_API_KEY}"
+      HERMES_BASE_URL: "https://openrouter.ai/api/v1"
+    volumes:
+      - ./output/openrouter:/app/output
+    command: ["The current state of open-source LLMs in 2025"]
+
+volumes:
+  ollama_data:

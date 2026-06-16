@@ -1,0 +1,7 @@
+.venv
+.hermes_home
+output
+.git
+__pycache__
+*.pyc
+*.pyo

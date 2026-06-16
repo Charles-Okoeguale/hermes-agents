@@ -1,0 +1,5 @@
+# Hermes Agent provides the agent loop, LLM connection, and memory.
+hermes-agent @ git+https://github.com/NousResearch/hermes-agent.git
+
+# The custom tools use only the Python standard library (urllib, json, re),
+# so no other runtime dependencies are required.

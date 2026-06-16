@@ -1,0 +1,10 @@
+services:
+  workflow:
+    build: .
+    env_file: .env
+    volumes:
+      - ./output:/app/output
+      # Persist long-term memory on the host so it survives across runs
+      # and can be demonstrated carrying over between container runs.
+      - ./.hermes_home:/app/.hermes_home
+    command: ["The current state of open-source LLMs in 2025"]
