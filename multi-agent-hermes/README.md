@@ -26,6 +26,9 @@ User gives a topic
 
 ## Run with Docker (recommended)
 
+**Prerequisite:** [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+installed and running (includes Docker Compose).
+
 From a fresh clone, three steps — in this order:
 
 ```bash
@@ -59,8 +62,11 @@ You can also use `docker compose up --build` to run the default topic set in the
 
 ## Run locally (without Docker)
 
+**Prerequisite:** Python 3.11–3.13 installed. (Use whichever you have — e.g.
+`python3.11`, `python3.12`, or `python3.13` — in the `venv` command below.)
+
 ```bash
-python3.12 -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
